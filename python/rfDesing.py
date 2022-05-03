@@ -49,15 +49,15 @@ MGS , MAG       = sym.symbols('MGS_db,MAG_db')
 
 z0  = 50        #[ohm]
 zL  = 50
-f   = 1.8e9     #Cambiar a 1600[Gz] Grupo 14!! 1.4 es de ejemplo para ver si anda bien el programa, 1.8 de test
-Vce = 1.0       #1 a 4 [V] con paso de 0.5 ,1 v de test
-Ic  = 60        #18-22-28-35-37-42-48-50 [mA] , 60 mA de test
+f   = 1.6e9     #Cambiar a 1600[Gz] Grupo 14!! 1.4 es de ejemplo para ver si anda bien el programa, 1.8 de test
+Vce = 1.5       #1 a 4 [V] con paso de 0.5 ,1 v de test
+Ic  = 50        #18-22-28-32-37-42-48-50 [mA] , 60 mA de test
 # 50 mA anda bien para nuestro caso
 ########################################
 # Obtencion de parametros S
 ########################################
-path = "SPAR\BFP450\BFP450_w_noise_VCE_{}V_IC_{}mA.s2p".format(Vce,Ic) #path de test
-# path = "SPAR\BFP640\BFP640_VCE_{}V_IC_{}mA.s2p".format(Vce,Ic)
+# path = "SPAR\BFP450\BFP450_w_noise_VCE_{}V_IC_{}mA.s2p".format(Vce,Ic) #path de test
+path = "SPAR\BFP640\BFP640_VCE_{}V_IC_{}mA.s2p".format(Vce,Ic)
 s2p = rf.Network(path)
 ind = np.where(s2p.f == f)[0]   #Encuentro el indice donde se encuentra la freq elegida para obtener los parametros S
 param = s2p.s[ind][0]           #Parametros S encontrados expresados en Real Imaginario 
@@ -84,6 +84,10 @@ if(k<1):
     exit()
 else: 
     print("Incondicionalmente Estable, se puede seguir con el diseño para maxima ganancia.")
+
+# s2p.plot_s_db()
+# plt.show()
+# exit()
 ########################################
 # Calculos auxiliares
 ########################################
@@ -185,15 +189,50 @@ print('Se necesita sintetizar un capacitor de {}[F]'.format(C_out))
 ########################################
 # Microtiras 
 ########################################
-z = 50   #[ohm] impedancia a diseñar
 er= 4.5
 H = 1.66  #mm datos de ejemplo
 t = 0.04  #mm datos de ejemplo
 tipo = 0  # 1 Hammerstad, 0 Wheeler
-print('Diseño de microtira para z0= {}'.format(z).center(100,'_'))
 
-A,B,W,ratio,er_p,z0_p = microtira(tipo,t,H,er,z)
-# d_lamba4_in =  length_lamda4(f,er_p)
+# Transformador lamba/4 de entrada
+z = z_lamba4_in   #[ohm] impedancia a diseñar
+print('Diseño de microtira para Transformador lamba/4 de entrada con z0= {}'.format(z).center(100,'_'))
+A,B,W,ratio,er_p,z0_p   = microtira(tipo,t,H,er,z)
+d_lamba4_in             =  length_lamda4(f,er_p)
+print('Longitud de microtira: {}[m]'.format(d_lamba4_in))
 
-d_Cin = length_C(z0_p,f,er_p,C_out) 
-print(d_Cin)
+# Transformador lamba/4 de salida
+z = z_lamba4_out   #[ohm] impedancia a diseñar
+print('Diseño de microtira para Transformador lamba/4 de salida con z0= {}'.format(z).center(100,'_'))
+A,B,W,ratio,er_p,z0_p   = microtira(tipo,t,H,er,z)
+d_lamba4_out            =  length_lamda4(f,er_p)
+print('Longitud de microtira: {}[m]'.format(d_lamba4_out))
+
+# Capacitor de entrada
+z = 50   #[ohm] impedancia a diseñar Consultar si usamos z_lamba4_in o 50 ohm
+print('Diseño de microtira para capacitor de entrada con z0= {}'.format(z).center(100,'_'))
+A,B,W,ratio,er_p,z0_p   = microtira(tipo,t,H,er,z)
+d_Cin = length_C(z0_p,f,er_p,C_in)
+print('Longitud de microtira: {}[m]'.format(d_Cin))
+
+
+# Capacitor de salida
+z = 50   #[ohm] impedancia a diseñar
+print('Diseño de microtira para capacitor de salida con z0= {}'.format(z).center(100,'_'))
+A,B,W,ratio,er_p,z0_p   = microtira(tipo,t,H,er,z)
+d_Cout = length_C(z0_p,f,er_p,C_out)
+print('Longitud de microtira: {}[m]'.format(d_Cout))
+
+# Transformador lamba/4 de desacople 1
+z = 20   #[ohm] impedancia a diseñar
+print('Diseño de microtira para Transformador lamba/4 de desacople a CA con z0= {}'.format(z).center(100,'_'))
+A,B,W,ratio,er_p,z0_p   = microtira(tipo,t,H,er,z)
+d_lamba4_descople_CA             =  length_lamda4(f,er_p)
+print('Longitud de microtira: {}[m]'.format(d_lamba4_descople_CA))
+
+# Transformador lamba/4 de desacople 2
+z = 100   #[ohm] impedancia a diseñar
+print('Diseño de microtira para Transformador lamba/4 de desacople a CC con z0= {}'.format(z).center(100,'_'))
+A,B,W,ratio,er_p,z0_p   = microtira(tipo,t,H,er,z)
+d_lamba4_descople_CC             =  length_lamda4(f,er_p)
+print('Longitud de microtira: {}[m]'.format(d_lamba4_descople_CC))
