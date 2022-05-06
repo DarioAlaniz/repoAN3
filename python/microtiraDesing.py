@@ -1,6 +1,6 @@
 
 import numpy as np
-
+import cmath
 def microtira(tipo,t,H,er,zo):
     if (tipo):
         # Hammerstad
