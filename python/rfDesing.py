@@ -20,7 +20,7 @@ def serie2parallel(z):
 
 def adapt(z):
     r_p,x_p = serie2parallel(z)
-    if(x_p>0): #Inductor, no hace le transformador lamda/4
+    if(x_p>0): #Inductor
         print('No se necesita usar el transformador lamda/4 para mover la reactancia ya que es inductiva')
         z_lamba4 = np.sqrt(z0*r_p)
     else:
@@ -57,7 +57,6 @@ def calc_circle(c, r):
     theta = np.linspace(0, 2*np.pi, 1000)
     return c + r*np.exp(1.0j*theta)
 ###########################################################################
-
 
 Z_out , Z_in    = sym.symbols('Z_out,Z_in')
 r_in , r_out    = sym.symbols('\sigma_in,\sigma_out')
@@ -174,7 +173,7 @@ print('Adaptacion en la entrada'.center(100,'_'))
 z_lamba4_in,C_in,R_in_p , X_in_p = adapt(z_in_serie)
 # print(z_lamba4_in,C_in,R_in_p , X_in_p)
 # Modelo paralelo de entrada
-if(np.angle(X_in_p,deg=True)>0): # si es mayor a cero es que trabajo con el modelo paralelo y no serie
+if(np.angle(X_in_p,deg=True)>=0 and np.angle(X_in_p,deg=True)<180): # si es mayor a cero es que trabajo con el modelo paralelo y no serie
     print('Modelo paralelo de entrada'.center(100,'_'))
     Rinp, Xinp = sym.symbols('R_in(p) , X_in(p)')
     R_in_p , X_in_p = serie2parallel(z_in_serie) 
@@ -184,6 +183,7 @@ if(np.angle(X_in_p,deg=True)>0): # si es mayor a cero es que trabajo con el mode
     print(X_in_p)
 else:
     print('reactancia desplazada lamda/4 es: {}'.format(X_in_p))
+
 print('Transformador lamda/4 de entrada'.center(100,'_'))
 zlamba4in   = sym.symbols('Z_\lamda/4(in)')
 sym.print_latex(zlamba4in)
@@ -195,9 +195,9 @@ print('Se necesita sintetizar un capacitor de {}[F]'.format(C_in))
 ########################################
 print('Adaptacion en la salida'.center(100,'_'))
 z_lamba4_out,C_out,R_out_p, X_out_p  = adapt(z_out_serie)
-# print(z_lamba4_out,C_out,R_out_p, X_out_p)
+# print(z_lamba4_out,C_out,R_out_p, X_out_p,np.angle(X_out_p,deg=True))
 # Modelo paralelo de salida
-if(np.angle(X_out_p,deg=True)>0):# si es mayor a cero es que se trabajo con el modelo paralelo y no serie
+if(np.angle(X_out_p,deg=True)>=0 and np.angle(X_out_p,deg=True)<180):# si es mayor a cero es que se trabajo con el modelo paralelo y no serie
     print('Modelo paralelo de salida'.center(100,'_'))
     Routp, Xoutp = sym.symbols('R_out(p) , X_out(p)')
     sym.print_latex(Routp)
