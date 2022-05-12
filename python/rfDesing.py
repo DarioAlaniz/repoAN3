@@ -101,15 +101,15 @@ else:
     print("Incondicionalmente Estable, se puede seguir con el diseño para maxima ganancia.")
 # Plot circulos de estabilidad
 # Circulos de estabilidad
-rs,cs,rl,cl = rad_center(s11,s12,s21,s22,D)
-ns = rf.Network(name='f='+str(f/1.e+9)+', S1', s=calc_circle(cs, rs))
-ns.plot_s_smith(draw_labels=True)
-nl = rf.Network(name='f='+str(f/1.e+9)+', S2', s=calc_circle(cl, rl))
-nl.plot_s_smith(draw_labels=True)
-plt.show()
-a = input('1: Para seguir, 0: Para salir ')
-if(a=='0'):
-    exit()
+# rs,cs,rl,cl = rad_center(s11,s12,s21,s22,D)
+# ns = rf.Network(name='f='+str(f/1.e+9)+', S1', s=calc_circle(cs, rs))
+# ns.plot_s_smith(draw_labels=True)
+# nl = rf.Network(name='f='+str(f/1.e+9)+', S2', s=calc_circle(cl, rl))
+# nl.plot_s_smith(draw_labels=True)
+# plt.show()
+# a = input('1: Para seguir, 0: Para salir ')
+# if(a=='0'):
+#     exit()
 # s2p.plot_s_db()
 # plt.show()
 ########################################
@@ -252,15 +252,15 @@ d_Cout = length_C(z0_p,f,er_p,C_out)
 print('Longitud de microtira: {}[m]'.format(d_Cout))
 
 # Transformador lamba/4 de desacople 1
-z = 20   #[ohm] impedancia a diseñar
-print('Diseño de microtira para Transformador lamba/4 de desacople a CA con z0= {}'.format(z).center(100,'_'))
+z = 25   #[ohm] impedancia a diseñar
+print('Diseño de microtira para capacitor de desacople con z0= {}'.format(z).center(100,'_'))
 A,B,W,ratio,er_p,z0_p   = microtira(tipo,t,H,er,z)
 d_lamba4_descople_CA             =  length_lamda4(f,er_p)
 print('Longitud de microtira: {}[m]'.format(d_lamba4_descople_CA))
 
 # Transformador lamba/4 de desacople 2
-z = 100   #[ohm] impedancia a diseñar
-print('Diseño de microtira para Transformador lamba/4 de desacople a CC con z0= {}'.format(z).center(100,'_'))
+z = 95   #[ohm] impedancia a diseñar
+print('Diseño de microtira para Inductor choque con z0= {}'.format(z).center(100,'_'))
 A,B,W,ratio,er_p,z0_p   = microtira(tipo,t,H,er,z)
 d_lamba4_descople_CC             =  length_lamda4(f,er_p)
 print('Longitud de microtira: {}[m]'.format(d_lamba4_descople_CC))
