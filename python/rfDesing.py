@@ -259,7 +259,7 @@ d_lamba4_descople_CA             =  length_lamda4(f,er_p)
 print('Longitud de microtira: {}[m]'.format(d_lamba4_descople_CA))
 
 # Transformador lamba/4 de desacople 2
-z = 95   #[ohm] impedancia a diseñar
+z = 85   #[ohm] impedancia a diseñar
 print('Diseño de microtira para Inductor choque con z0= {}'.format(z).center(100,'_'))
 A,B,W,ratio,er_p,z0_p   = microtira(tipo,t,H,er,z)
 d_lamba4_descople_CC             =  length_lamda4(f,er_p)
